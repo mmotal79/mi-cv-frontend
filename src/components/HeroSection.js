@@ -5,7 +5,7 @@ import imagenPerfil from '../assets/Miguel.jpg'; // <-- ¡VERIFICA ESTO!
 
 function HeroSection() {
   return (
-    <section
+    <section id="hero"
       className="relative bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-20 md:py-32 text-center shadow-lg
                  bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${imagenPortada})` }}
@@ -21,7 +21,7 @@ function HeroSection() {
           Miguel Mota
         </h1>
         <p className="text-xl md:text-3xl font-light mb-8 opacity-90 animate-fade-in-up">
-          Experto en Desarrollo de Software y Liderazgo de Equipos
+          Ingeniero y Project Manager experto en transformar ideas y sueños en software.
         </p>
         <a
           href="mailto:mmotal@gmail.com"

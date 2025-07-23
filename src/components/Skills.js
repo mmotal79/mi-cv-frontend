@@ -14,7 +14,7 @@ function Skills() {
   ];
 
   return (
-    <section className='py-16 bg-gray-50 border-b border-gray-200'>
+    <section id="skills" className='py-16 bg-gray-50 border-b border-gray-200'>
       <div className='container mx-auto px-6'>
         <h2 className='text-3xl md:text-4xl font-bold text-gray-800 text-center mb-10'>
           Mis Habilidades
