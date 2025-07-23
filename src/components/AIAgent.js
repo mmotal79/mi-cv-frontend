@@ -27,8 +27,8 @@ const handleSendMessage = async () => {
   try {
     // Línea corregida - nota el backtick de cierre y el punto y coma
     //const API_URL = process.env.REACT_APP_API_URL || `http://${window.location.hostname === 'localhost' ? '192.168.1.105' : window.location.hostname}:3001`;
-	//const API_URL = 'https://mi-cv-backend.onrender.com:3001'; // **¡Reemplaza con tu URL real de Render!**
-	const API_URL = process.env.REACT_APP_API_URL;
+	const API_URL = 'https://mi-cv-backend.onrender.com:3001'; // **¡Reemplaza con tu URL real de Render!**
+	//const API_URL = process.env.REACT_APP_API_URL;
     
     const response = await fetch(`${API_URL}/api/chat-cv`, {
       method: 'POST',
