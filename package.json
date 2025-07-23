@@ -1,5 +1,5 @@
 {
-  "name": "miguel-mota",
+  "name": "mi-cv-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,6 +12,7 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -21,7 +22,7 @@
     "dev": "concurrently \"npm run start:backend\" \"npm run start\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*.{js,jsx}\" --fix",
-    "test-network": "ping 192.168.1.103 && telnet 192.168.1.103 3001"
+    "test-network": "ping 192.168.1.105 && telnet 192.168.1.105 3001"
   },
   "proxy": "http://localhost:3001",
   "eslintConfig": {
