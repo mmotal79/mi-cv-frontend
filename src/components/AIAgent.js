@@ -4,12 +4,22 @@ function AIAgent() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Para mostrar un indicador de carga
-  const messagesEndRef = useRef(null); // Para hacer scroll automático
+  // const messagesEndRef = useRef(null); // <-- Esta línea se está modificando/reemplazando
 
   // Función para hacer scroll al último mensaje
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // const scrollToBottom = () => { // <-- Esta línea se está modificando/reemplazando
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); // <-- Esta línea se está modificando/reemplazando
+  // }; // <-- Esta línea se está modificando/reemplazando
+
+  // <-- Las siguientes líneas son nuevas o se están modificando para un scroll más controlado:
+  const chatMessagesRef = useRef(null); // <-- Esta línea es nueva: Nueva referencia para el contenedor de mensajes
+  const scrollToBottom = () => { // <-- Esta línea se está modificando
+    if (chatMessagesRef.current) {
+      // <-- Esta línea es nueva: Manipulación directa del scrollTop para un scroll interno
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
+    }
   };
+  // <-- Fin de las modificaciones del scroll
 
   // Efecto para hacer scroll cada vez que los mensajes cambian
   useEffect(() => {
@@ -66,9 +76,15 @@ const handleSendMessage = async () => {
           Consúltame! Pregúntame sobre Miguel... 
         </h2>
 
-        <div className="bg-white rounded-lg shadow-xl overflow-hidden mb-6 h-96 flex flex-col border border-gray-200">
+        {/* <-- Esta línea se está modificando: Añadimos 'max-h-[80vh]' para altura responsiva
+             y asegurar que el scroll se confine al contenedor del chat.
+             Esto reemplaza una posible 'h-96' u otra altura fija. */}
+        <div className="bg-white rounded-lg shadow-xl overflow-hidden mb-6 flex flex-col border border-gray-200 max-h-[80vh]"> {/* <-- LÍNEA MODIFICADA */}
+          
           {/* Área de mensajes */}
-          <div className="flex-1 p-6 overflow-y-auto space-y-4">
+          {/* <-- Esta línea se está modificando: Aplicamos 'ref={chatMessagesRef}' a este div,
+               que es el que tiene 'overflow-y-auto' y es el que queremos desplazar. */}
+          <div ref={chatMessagesRef} className="flex-1 p-6 overflow-y-auto space-y-4"> {/* <-- LÍNEA MODIFICADA */}
             {messages.length === 0 && (
               <p className="text-gray-500 text-center italic">
                 ¡Hola! Soy el asistente personal de Miguel. Responderé cualquier pregunta sobre su currículum. Por ejemplo: "¿Cuál es su experiencia en C#?" o "¿Qué proyectos ha realizado?"
@@ -94,12 +110,12 @@ const handleSendMessage = async () => {
               <div className="flex justify-start">
                 <div className="max-w-[80%] px-4 py-2 rounded-lg shadow-sm bg-gray-200 text-gray-800">
                   Escribiendo...
-                  {/* Un simple indicador de carga */}
                   <span className="animate-pulse ml-2">...</span>
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} /> {/* Elemento para el scroll automático */}
+            {/* <-- Esta línea se está eliminando: Ya no necesitamos este div vacío para el scroll */}
+            {/* <div ref={messagesEndRef} /> */} 
           </div>
 
           {/* Área de entrada de texto */}
@@ -111,11 +127,11 @@ const handleSendMessage = async () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={isLoading} // Deshabilitar mientras carga
+              disabled={isLoading}
             />
             <button
               onClick={handleSendMessage}
-              disabled={isLoading} // Deshabilitar mientras carga
+              disabled={isLoading}
               className="ml-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Enviar
