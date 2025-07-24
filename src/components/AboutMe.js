@@ -65,7 +65,7 @@ function AboutMe() {
             </p>
           </div>
           {/* Contenedor del Video */}
-          <div className="md:w-1/2">
+          <div className='md:w-1/2'>
             <video
               ref={videoRef} // Asocia la referencia al elemento de video
               src={videoPresentacion}
