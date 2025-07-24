@@ -22,7 +22,7 @@ function AboutMe() {
         if (entry.isIntersecting) {
           // Si el video está visible, intenta reproducirlo
           videoElement.play().catch(error => {
-            console.warn("Autoplay impedido:", error);
+            console.warn('Autoplay impedido:', error);
             // Esto ocurre a menudo si el navegador requiere interacción del usuario
             // o si no está silenciado. Por eso, es buena práctica añadir 'muted' y 'loop'.
           });
