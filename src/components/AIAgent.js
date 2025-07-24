@@ -4,13 +4,7 @@ function AIAgent() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Para mostrar un indicador de carga
-  // const messagesEndRef = useRef(null); // <-- Esta línea se está modificando/reemplazando
-
-  // Función para hacer scroll al último mensaje
-  // const scrollToBottom = () => { // <-- Esta línea se está modificando/reemplazando
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); // <-- Esta línea se está modificando/reemplazando
-  // }; // <-- Esta línea se está modificando/reemplazando
-
+  
   // <-- Las siguientes líneas son nuevas o se están modificando para un scroll más controlado:
   const chatMessagesRef = useRef(null); // <-- Esta línea es nueva: Nueva referencia para el contenedor de mensajes
   const scrollToBottom = () => { // <-- Esta línea se está modificando
