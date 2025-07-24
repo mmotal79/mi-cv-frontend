@@ -24,7 +24,7 @@ function Projects() {
       link: '#'
     },
     {
-      // imageUrl: '/auditor.png', // <-- EJEMPLO: Este proyecto no tiene imagen para demostrar el caso sin imagen
+      imageUrl: '/auditor.png', // <-- EJEMPLO: Este proyecto no tiene imagen para demostrar el caso sin imagen
       name: 'Auditor de Sistemas en Control Interno y Control de Calidad (Tester QA)',
       description: 'Implementé COBIT/Sudeban en sistemas bancarios (Windows/AS400), liderando el control de versiones y certificación de código. Así materializo soluciones conformes y robustas.',
       tags: ['HTML', 'CSS', 'JavaScript', 'Desarrollo Web', 'APIs REST', 'AS400', 'Windows'],
@@ -38,7 +38,7 @@ function Projects() {
       link: '#'
     },
     {
-      // imageUrl: '/siadca.jpg', // <-- EJEMPLO: Este proyecto no tiene imagen
+      imageUrl: '/siadca.jpg', // <-- EJEMPLO: Este proyecto no tiene imagen
       name: 'Desarrollo sistema Siadca para Aserraderos',
       description: 'Creé un sistema administrativo integral (PowerBuilder, MySQL) para aserraderos, optimizando producción, ventas y facturación. ¡Convierto necesidades operativas en software eficaz!',
       tags: ['Powerbuilder', 'MySql', 'PLSql'],
