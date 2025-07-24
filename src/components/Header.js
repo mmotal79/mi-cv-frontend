@@ -76,7 +76,7 @@ function Header() {
           <ul className="flex flex-col items-center space-y-4">
 		    <li>
               <a href="#hero" onClick={(e) => handleNavLinkClick(e, 'hero')} className="block py-2 hover:text-blue-400 transition duration-300 font-semibold">
-                Sobre Mí
+                Inicio
               </a>
             </li>
             <li>
