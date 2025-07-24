@@ -3,7 +3,7 @@ import React from 'react';
 function Projects() {
   const projects = [
     {
-      imageUrl: '/assets/imagen-portada.jpg', // <-- CAMBIO: Agregado campo para la imagen (ruta relativa desde la raíz pública)
+      imageUrl: '/imagen-portada.jpg', // <-- CAMBIO: Agregado campo para la imagen (ruta relativa desde la raíz pública)
       name: 'Sistema Gerencial para Conglomerado Ramo de Repuesto Vehicular',
       description: 'Creé robustas apps desktop (C#/WPF) para PyMEs, optimizando inventario, ventas y finanzas (SQL Server). ¡Tu experto que potencia la eficiencia empresarial!',
       tags: ['C#', 'WPF', 'SQL Server', 'Desktop', 'Gestión'],
