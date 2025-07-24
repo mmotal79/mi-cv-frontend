@@ -102,7 +102,7 @@ const handleSendMessage = async () => {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[80%] min-h-[50vh] px-4 py-2 rounded-lg shadow-sm bg-gray-200 text-gray-800">
+                <div className="max-w-[80%] px-4 py-2 rounded-lg shadow-sm bg-gray-200 text-gray-800">
                   Escribiendo...
                   <span className="animate-pulse ml-2">...</span>
                 </div>
