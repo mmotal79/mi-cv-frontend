@@ -126,9 +126,23 @@ const handleSendMessage = async () => {
             <button
               onClick={handleSendMessage}
               disabled={isLoading}
-              className="ml-4 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="ml-4 bg-blue-600 text-white px-4 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed
+                         md:px-6" // Ajuste de padding: en móvil es px-4, en md+ vuelve a px-6
             >
-              Enviar
+              {/* Texto visible en desktop, oculto en móvil */}
+              <span className="hidden md:inline">Enviar</span> 
+              
+              {/* Icono visible en móvil, oculto en desktop */}
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth="2.5" 
+                stroke="currentColor" 
+                className="w-6 h-6 inline md:hidden" // Controla visibilidad y tamaño
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L6 12zm0 0h12" />
+              </svg>
             </button>
           </div>
         </div>
