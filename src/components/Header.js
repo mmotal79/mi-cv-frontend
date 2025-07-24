@@ -61,7 +61,7 @@ function Header() {
           <a href="#experience" onClick={(e) => handleNavLinkClick(e, 'experience')} className="hover:text-blue-400 transition duration-300 font-semibold">
             Experiencia
           </a>
-          <a href="#ia-agent" onClick={(e) => handleNavLinkClick(e, 'ai-agent')} className="hover:text-blue-400 transition duration-300 font-semibold">
+          <a href="#ai-agent" onClick={(e) => handleNavLinkClick(e, 'ai-agent')} className="hover:text-blue-400 transition duration-300 font-semibold">
             Agente IA
           </a>
           <a href="#contact" onClick={(e) => handleNavLinkClick(e, 'contact')} className="hover:text-blue-400 transition duration-300 font-semibold">
@@ -95,7 +95,7 @@ function Header() {
               </a>
             </li>
             <li>
-              <a href="#ia-agent" onClick={(e) => handleNavLinkClick(e, 'ai-agent')} className="block py-2 hover:text-blue-400 transition duration-300 font-semibold">
+              <a href="#ai-agent" onClick={(e) => handleNavLinkClick(e, 'ai-agent')} className="block py-2 hover:text-blue-400 transition duration-300 font-semibold">
                 Agente IA
               </a>
             </li>
