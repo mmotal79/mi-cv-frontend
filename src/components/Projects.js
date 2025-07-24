@@ -38,7 +38,7 @@ function Projects() {
       link: '#'
     },
     {
-      imageUrl: '/siadca.jpg', // <-- EJEMPLO: Este proyecto no tiene imagen
+      imageUrl: '/siadca.png', // <-- EJEMPLO: Este proyecto no tiene imagen
       name: 'Desarrollo sistema Siadca para Aserraderos',
       description: 'Creé un sistema administrativo integral (PowerBuilder, MySQL) para aserraderos, optimizando producción, ventas y facturación. ¡Convierto necesidades operativas en software eficaz!',
       tags: ['Powerbuilder', 'MySql', 'PLSql'],
