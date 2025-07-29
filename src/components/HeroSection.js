@@ -4,7 +4,7 @@ import imagenPortada from '../assets/imagen-portada.jpg';
 import imagenPerfil from '../assets/Miguel.jpg';
 
 function HeroSection() {
-  const fullText = "Ingeniero y Project Manager experto en transformar ideas y sueños en software.";
+  const fullText = 'Ingeniero y Project Manager experto en transformar ideas y sueños en software.';
   const [displayText, setDisplayText] = useState('');
   const [index, setIndex] = useState(0);
 
