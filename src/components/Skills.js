@@ -11,7 +11,8 @@ function Skills() {
   const softSkills = [
     'Gestión de Equipos', 'Liderazgo', 'Trabajo Autónomo', 'Comunicación Efectiva', 'Asertividad',
     'Resolución de Problemas', 'Análisis de Requisitos', 'Proactividad', 'Pensamiento Crítico',
-    'Tolerante', 'Proactivo', 'Empático', 'Solidario'
+    'Tolerante', // CORREGIDO: Eliminada la comilla extra
+    'Proactivo'
   ];
 
   // Combinamos todas las habilidades en una sola lista para la animación secuencial
@@ -87,8 +88,10 @@ function Skills() {
 
       return (
         <span
-          key={globalIndex} // Usar el índice global para la key si la lista es plana
-          className={'${baseClasses} ${typeClasses} ${highlightClasses}'}
+          key={globalIndex}
+          // CORREGIDO: Uso de Array.prototype.join(' ') para concatenar clases
+          // Esto resuelve los errores de 'no-unused-vars' y 'no-template-curly-in-string'
+          className={[baseClasses, typeClasses, highlightClasses].filter(Boolean).join(' ')}
         >
           {skill}
         </span>
