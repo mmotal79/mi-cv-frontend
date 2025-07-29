@@ -4,7 +4,7 @@ import imagenPortada from '../assets/imagen-portada.jpg';
 import imagenPerfil from '../assets/Miguel.jpg';
 
 function HeroSection() {
-  const fullText = 'Ingeniero y Project Manager experto en transformar ideas y sueños en software.';
+  const fullText = "Ingeniero y Project Manager experto en transformar ideas y sueños en software.";
   const [displayText, setDisplayText] = useState('');
   const [index, setIndex] = useState(0);
   const sectionRef = useRef(null);
@@ -23,16 +23,18 @@ function HeroSection() {
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentSectionRef = sectionRef.current; // Capturar el valor actual de la ref
+
+    if (currentSectionRef) {
+      observer.observe(currentSectionRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentSectionRef) { // Usar la variable capturada en el cleanup
+        observer.unobserve(currentSectionRef);
       }
     };
-  }, [sectionRef]);
+  }, [sectionRef]); // sectionRef como dependencia para re-ejecutar si la ref cambia (aunque es poco común para useRef)
 
   // Efecto para la animación de escritura
   useEffect(() => {
@@ -67,7 +69,6 @@ function HeroSection() {
   // Función para manejar el clic del botón de contacto
   const handleContactClick = (e) => {
     e.preventDefault();
-    // Email y asunto (ya actualizado en la revisión anterior)
     window.location.href = 'mailto:quierohablarteya@gmail.com?subject=Contactando desde la LandingPage Miguel Mota';
   };
 
