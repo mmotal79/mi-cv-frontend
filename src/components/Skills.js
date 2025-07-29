@@ -11,7 +11,7 @@ function Skills() {
   const softSkills = [
     'Gestión de Equipos', 'Liderazgo', 'Trabajo Autónomo', 'Comunicación Efectiva', 'Asertividad',
     'Resolución de Problemas', 'Análisis de Requisitos', 'Proactividad', 'Pensamiento Crítico',
-    ''Tolerante', 'Proactivo'
+    'Tolerante', 'Proactivo', 'Empático', 'Solidario'
   ];
 
   // Combinamos todas las habilidades en una sola lista para la animación secuencial
