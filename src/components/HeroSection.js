@@ -1,5 +1,5 @@
 // src/components/HeroSection.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import imagenPortada from '../assets/imagen-portada.jpg';
 import imagenPerfil from '../assets/Miguel.jpg';
 
@@ -7,25 +7,73 @@ function HeroSection() {
   const fullText = 'Ingeniero y Project Manager experto en transformar ideas y sueños en software.';
   const [displayText, setDisplayText] = useState('');
   const [index, setIndex] = useState(0);
+  const sectionRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
 
+  // Observador para detectar si la sección está en el viewport
   useEffect(() => {
-    if (index < fullText.length) {
-      const timeoutId = setTimeout(() => {
-        setDisplayText(fullText.substring(0, index + 1));
-        setIndex(prevIndex => prevIndex + 1);
-      }, 50); // Velocidad de escritura (ms por carácter)
-      return () => clearTimeout(timeoutId);
-    } else if (index === fullText.length) {
-      // Opcional: reiniciar la animación después de un tiempo si quieres un loop continuo
-      // setTimeout(() => {
-      //   setDisplayText('');
-      //   setIndex(0);
-      // }, 5000); // Espera 5 segundos antes de reiniciar
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5,
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
-  }, [index, fullText]);
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [sectionRef]);
+
+  // Efecto para la animación de escritura
+  useEffect(() => {
+    let typingTimeout;
+    let resetTimeout;
+
+    if (isInView) {
+      if (index < fullText.length) {
+        typingTimeout = setTimeout(() => {
+          setDisplayText(fullText.substring(0, index + 1));
+          setIndex(prevIndex => prevIndex + 1);
+        }, 50);
+      } else {
+        resetTimeout = setTimeout(() => {
+          setDisplayText('');
+          setIndex(0);
+        }, 5000);
+      }
+    } else {
+      clearTimeout(typingTimeout);
+      clearTimeout(resetTimeout);
+      setDisplayText('');
+      setIndex(0);
+    }
+
+    return () => {
+      clearTimeout(typingTimeout);
+      clearTimeout(resetTimeout);
+    };
+  }, [index, fullText, isInView]);
+
+  // Función para manejar el clic del botón de contacto
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    // Email y asunto (ya actualizado en la revisión anterior)
+    window.location.href = 'mailto:quierohablarteya@gmail.com?subject=Contactando desde la LandingPage Miguel Mota';
+  };
 
   return (
     <section id="hero"
+      ref={sectionRef}
       className="relative bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-20 md:py-32 text-center shadow-lg
                  bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${imagenPortada})` }}
@@ -43,12 +91,12 @@ function HeroSection() {
         <p className="text-xl md:text-3xl font-semibold mb-8 opacity-90 animate-fade-in-up drop-shadow-md">
           {displayText}
         </p>
-        <a
-          href="mailto:quierohablarteya@gmail.com"
-          className="bg-white text-blue-700 hover:bg-blue-100 font-bold py-3 px-8 rounded-full text-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105"
+        <button
+          onClick={handleContactClick}
+          className="bg-white text-blue-700 hover:bg-blue-700 hover:text-white font-bold py-3 px-8 rounded-full text-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105"
         >
           Contactar
-        </a>
+        </button>
       </div>
     </section>
   );
