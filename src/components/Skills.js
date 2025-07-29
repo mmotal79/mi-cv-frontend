@@ -77,10 +77,10 @@ function Skills() {
       const globalIndex = type === 'technical' ? index : technicalSkills.length + index;
       const isHighlighted = isInView && globalIndex === highlightedSkillIndex;
 
-      const baseClasses = `px-4 py-2 rounded-full text-sm font-medium transition duration-300 ease-in-out`;
+      const baseClasses = 'px-4 py-2 rounded-full text-sm font-medium transition duration-300 ease-in-out';
       const typeClasses = type === 'technical'
-        ? `bg-blue-100 text-blue-800 hover:bg-blue-200`
-        : `bg-indigo-100 text-indigo-800 hover:bg-indigo-200`;
+        ? 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+        : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200';
       const highlightClasses = isHighlighted
         ? 'transform scale-105 shadow-md ring-2 ring-opacity-75 ring-blue-500' // Agrega un anillo para mayor visibilidad
         : '';
@@ -88,7 +88,7 @@ function Skills() {
       return (
         <span
           key={globalIndex} // Usar el índice global para la key si la lista es plana
-          className={`${baseClasses} ${typeClasses} ${highlightClasses}`}
+          className={'${baseClasses} ${typeClasses} ${highlightClasses}'}
         >
           {skill}
         </span>
