@@ -39,47 +39,46 @@ function AIAgent() {
     return () => clearInterval(intervalId); // Limpiar intervalo al desmontar o cambiar isLoading
   }, [isLoading]); // Dependencia: se ejecuta cuando isLoading cambia
 
-  const handleSendMessage = async () => {
-    if (input.trim() === '') return;
-
-    const newUserMessage = { sender: 'user', text: input };
-    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+  const handleSendMessage = async (e) => {
+    if (e) e.preventDefault(); // EVITA QUE LA PÁGINA SE RECARGUE/BLANQUEE
+    if (!input.trim() || isLoading) return;
+  
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-
+  
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${API_URL}/api/chat-cv`, {
+      const response = await fetch('https://mi-cv-backend.onrender.com/api/chat-cv', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),
       });
-
+  
       if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
+        throw new Error(`Error en el servidor: ${response.status}`);
       }
-
+  
       const data = await response.json();
-      const aiReply = { sender: 'ai', text: data.reply };
-      setMessages((prevMessages) => [...prevMessages, aiReply]);
-
+      
+      // Validamos que data.reply exista antes de usarlo
+      const botReply = data.reply || "Lo siento, no pude obtener una respuesta clara.";
+      setMessages(prev => [...prev, { role: 'bot', content: botReply }]);
     } catch (error) {
-      console.error('Error al enviar mensaje al backend:', error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: 'ai', text: 'Lo siento, no pude procesar tu solicitud. Por favor, inténtalo de nuevo.' }
-      ]);
+      console.error("Error al enviar mensaje:", error);
+      setMessages(prev => [...prev, { 
+        role: 'bot', 
+        content: "Ocurrió un error de conexión. Por favor, verifica que el backend esté activo." 
+      }]);
     } finally {
       setIsLoading(false);
     }
   };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !isLoading) {
-      handleSendMessage();
-    }
+  
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter' && !isLoading) {
+        handleSendMessage();
+      }
   };
 
   return (
@@ -160,3 +159,4 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
