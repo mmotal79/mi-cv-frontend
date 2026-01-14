@@ -47,19 +47,11 @@ function AIAgent() {
 
   return (
     <div className="max-w-xl mx-auto my-10 border rounded-xl shadow-lg bg-white flex flex-col h-[600px]">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-10">
-          Consúltame! Pregúntame sobre Miguel... 
-        </h2>
       <div className="p-4 bg-blue-700 text-white font-bold rounded-t-xl text-center">
         Asistente IA Miguel Mota - V3.0
       </div>
 
       <div ref={chatMessagesRef} className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
-        {messages.length === 0 && (
-              <p className="text-gray-500 text-center italic">
-                ¡Hola! Soy el asistente personal de Miguel. Responderé cualquier pregunta sobre su currículum. Por ejemplo: "¿Cuál es su experiencia en C#?" o "¿Qué proyectos ha realizado?"
-              </p>
-        )}
         {messages.map((msg, i) => (
           <div key={i} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
             <div className={`p-3 rounded-lg max-w-[90%] shadow-md ${
@@ -89,6 +81,7 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
 
 
 
