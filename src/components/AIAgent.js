@@ -54,22 +54,14 @@ function AIAgent() {
       <div ref={chatMessagesRef} className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
         {messages.map((msg, i) => (
           <div key={i} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-            <div className={`p-3 rounded-lg max-w-[90%] ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
-              {msg.text}
+            <div className={`p-3 rounded-lg max-w-[90%] shadow-md ${
+              msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'
+            }`}>
+              {/* Solo mostramos el texto de la respuesta */}
+              <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
             </div>
             
-            {/* Reporte de Modelos (Solo para la IA) */}
-            {msg.sender === 'ai' && msg.status && msg.status.length > 0 && (
-              <div className="mt-2 text-[10px] w-full max-w-[90%] border-t pt-1 border-gray-300">
-                <p className="font-semibold text-gray-500 mb-1">Traza de conexión:</p>
-                {msg.status.map((m, idx) => (
-                  <div key={idx} className={`flex justify-between ${m.status === 'FAILED' ? 'text-red-500' : m.status === 'SUCCESS' ? 'text-green-600' : 'text-gray-400'}`}>
-                    <span>• {m.name}</span>
-                    <span className="font-bold">{m.status === 'FAILED' ? '❌ SIN SERVICIO' : m.status === 'SUCCESS' ? '✅ CONECTADO' : '⏳ -'}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* HEMOS ELIMINADO EL BLOQUE QUE MOSTRABA LA TRAZA DE CONEXIÓN */}
           </div>
         ))}
         {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Consultando modelos V3.0...</div>}
@@ -89,4 +81,5 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
 
