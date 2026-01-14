@@ -64,7 +64,7 @@ function AIAgent() {
             {/* HEMOS ELIMINADO EL BLOQUE QUE MOSTRABA LA TRAZA DE CONEXIÓN */}
           </div>
         ))}
-        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Consultando modelos V3.0...</div>}
+        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Generando Respuesta...</div>}
       </div>
 
       <form onSubmit={handleSendMessage} className="p-4 border-t flex gap-2">
@@ -81,3 +81,4 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
