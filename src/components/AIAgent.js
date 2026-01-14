@@ -1,21 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 function AIAgent() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    { role: 'bot', content: "¡Hola! Soy el asistente virtual de Miguel Mota. \n\nEstoy listo para responder dudas sobre su experiencia, habilidades y proyectos. ¿En qué te ayudo?" }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const chatMessagesRef = useRef(null);
   const [loadingDots, setLoadingDots] = useState('');
-  const [debugInfo, setDebugInfo] = useState(null); // Estado para mostrar modelos
 
   // Auto-scroll
   useEffect(() => {
     if (chatMessagesRef.current) {
       chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
-  }, [messages, isLoading, debugInfo]);
+  }, [messages, isLoading]);
 
-  // Animación de puntos
+  // Animación de carga
   useEffect(() => {
     let interval;
     if (isLoading) {
@@ -27,43 +28,6 @@ function AIAgent() {
     }
     return () => clearInterval(interval);
   }, [isLoading]);
-
-  // ⚡️ NUEVO: Al cargar, verifica qué modelos funcionan y saluda
-  useEffect(() => {
-    const inicializarAgente = async () => {
-      try {
-        // 1. Mensaje de bienvenida inicial
-        setMessages([{ 
-          role: 'bot', 
-          content: "¡Hola! Soy el asistente virtual de Miguel. Estoy analizando mis capacidades..." 
-        }]);
-
-        // 2. Consultar al backend qué modelos tiene disponibles
-        const response = await fetch('https://mi-cv-backend.onrender.com/api/verificar-modelos');
-        const data = await response.json();
-
-        if (data.models && data.models.length > 0) {
-          // ÉXITO: Mostramos los modelos disponibles
-          setMessages(prev => [...prev, {
-            role: 'bot',
-            content: `✅ Conexión exitosa. Modelos de IA detectados y operativos para este chat:\n\n✨ ${data.models.join('\n✨ ')}\n\n¿Qué deseas saber sobre Miguel?`
-          }]);
-        } else {
-          setMessages(prev => [...prev, {
-            role: 'bot',
-            content: "⚠️ Alerta: El servidor responde, pero no detecto modelos de IA disponibles. Verifica tu API Key."
-          }]);
-        }
-      } catch (error) {
-        setMessages(prev => [...prev, {
-          role: 'bot',
-          content: "❌ Error de conexión con el Backend. Asegúrate de que el servidor en Render esté activo."
-        }]);
-      }
-    };
-
-    inicializarAgente();
-  }, []);
 
   const handleSendMessage = async (e) => {
     e.preventDefault(); 
@@ -81,18 +45,16 @@ function AIAgent() {
         body: JSON.stringify({ message: userText }),
       });
 
+      if (!response.ok) throw new Error('Error de conexión');
+
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.debug || 'Error desconocido');
-      }
-
       setMessages(prev => [...prev, { role: 'bot', content: data.reply }]);
+      
     } catch (error) {
       console.error("Error Frontend:", error);
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        content: `⛔ Error: ${error.message}. Intenta recargar la página.` 
+        content: "Tuve un pequeño problema de conexión. ¿Podrías preguntarme de nuevo?" 
       }]);
     } finally {
       setIsLoading(false);
@@ -100,9 +62,7 @@ function AIAgent() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[600px] p-4 bg-gray-50 font-sans">
-      
-      {/* TARJETA DE CHAT */}
+    <div className="flex items-center justify-center min-h-[500px] p-4 font-sans">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col h-[600px]">
         
         {/* HEADER */}
@@ -114,16 +74,13 @@ function AIAgent() {
             </div>
             <div>
               <h3 className="text-white font-bold text-lg">Asistente de Miguel</h3>
-              <p className="text-blue-200 text-xs">Potenciado por Gemini IA</p>
+              <p className="text-blue-200 text-xs">Online | Gemini 1.5 Flash</p>
             </div>
           </div>
         </div>
 
-        {/* ÁREA DE MENSAJES */}
-        <div 
-          ref={chatMessagesRef} 
-          className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-smooth"
-        >
+        {/* CHAT AREA */}
+        <div ref={chatMessagesRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-smooth">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm shadow-sm whitespace-pre-wrap ${
@@ -135,7 +92,6 @@ function AIAgent() {
               </div>
             </div>
           ))}
-
           {isLoading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 text-gray-500 px-4 py-2 rounded-full text-xs font-semibold animate-pulse">
@@ -152,7 +108,7 @@ function AIAgent() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu pregunta..."
+              placeholder="Pregunta sobre la experiencia de Miguel..."
               className="w-full bg-gray-100 text-gray-700 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               disabled={isLoading}
             />
