@@ -6,27 +6,67 @@ function AIAgent() {
   const [isLoading, setIsLoading] = useState(false);
   const chatMessagesRef = useRef(null);
   const [loadingDots, setLoadingDots] = useState('');
+  const [debugInfo, setDebugInfo] = useState(null); // Estado para mostrar modelos
 
-  // Auto-scroll al fondo del chat
+  // Auto-scroll
   useEffect(() => {
     if (chatMessagesRef.current) {
       chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, debugInfo]);
 
-  // Animación de puntos (...)
+  // Animación de puntos
   useEffect(() => {
     let interval;
     if (isLoading) {
       interval = setInterval(() => {
         setLoadingDots(prev => (prev.length < 3 ? prev + '.' : ''));
       }, 400);
+    } else {
+      setLoadingDots('');
     }
     return () => clearInterval(interval);
   }, [isLoading]);
 
+  // ⚡️ NUEVO: Al cargar, verifica qué modelos funcionan y saluda
+  useEffect(() => {
+    const inicializarAgente = async () => {
+      try {
+        // 1. Mensaje de bienvenida inicial
+        setMessages([{ 
+          role: 'bot', 
+          content: "¡Hola! Soy el asistente virtual de Miguel. Estoy analizando mis capacidades..." 
+        }]);
+
+        // 2. Consultar al backend qué modelos tiene disponibles
+        const response = await fetch('https://mi-cv-backend.onrender.com/api/verificar-modelos');
+        const data = await response.json();
+
+        if (data.models && data.models.length > 0) {
+          // ÉXITO: Mostramos los modelos disponibles
+          setMessages(prev => [...prev, {
+            role: 'bot',
+            content: `✅ Conexión exitosa. Modelos de IA detectados y operativos para este chat:\n\n✨ ${data.models.join('\n✨ ')}\n\n¿Qué deseas saber sobre Miguel?`
+          }]);
+        } else {
+          setMessages(prev => [...prev, {
+            role: 'bot',
+            content: "⚠️ Alerta: El servidor responde, pero no detecto modelos de IA disponibles. Verifica tu API Key."
+          }]);
+        }
+      } catch (error) {
+        setMessages(prev => [...prev, {
+          role: 'bot',
+          content: "❌ Error de conexión con el Backend. Asegúrate de que el servidor en Render esté activo."
+        }]);
+      }
+    };
+
+    inicializarAgente();
+  }, []);
+
   const handleSendMessage = async (e) => {
-    e.preventDefault(); // ¡Vital para no recargar la página!
+    e.preventDefault(); 
     if (!input.trim() || isLoading) return;
 
     const userText = input.trim();
@@ -35,22 +75,24 @@ function AIAgent() {
     setIsLoading(true);
 
     try {
-      // Conexión al Backend
       const response = await fetch('https://mi-cv-backend.onrender.com/api/chat-cv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userText }),
       });
 
-      if (!response.ok) throw new Error('Error de red');
-
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.debug || 'Error desconocido');
+      }
+
       setMessages(prev => [...prev, { role: 'bot', content: data.reply }]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error Frontend:", error);
       setMessages(prev => [...prev, { 
         role: 'bot', 
-        content: "😔 Perdí la conexión con el servidor. Por favor intenta más tarde." 
+        content: `⛔ Error: ${error.message}. Intenta recargar la página.` 
       }]);
     } finally {
       setIsLoading(false);
@@ -58,24 +100,21 @@ function AIAgent() {
   };
 
   return (
-    // CONTENEDOR PRINCIPAL CENTRADO
-    <div className="flex items-center justify-center min-h-[600px] p-4 bg-gray-50">
+    <div className="flex items-center justify-center min-h-[600px] p-4 bg-gray-50 font-sans">
       
-      {/* CAJA DEL CHAT (CARD) */}
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 transform transition-all hover:shadow-xl">
+      {/* TARJETA DE CHAT */}
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 flex flex-col h-[600px]">
         
-        {/* ENCABEZADO */}
-        <div className="bg-gradient-to-r from-blue-800 to-blue-600 p-4 flex items-center justify-between shadow-md">
+        {/* HEADER */}
+        <div className="bg-gradient-to-r from-blue-900 to-blue-600 p-4 shadow-md flex-shrink-0">
           <div className="flex items-center space-x-3">
             <div className="relative">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-blue-700 font-bold text-xl shadow-inner">
-                IA
-              </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-blue-800 rounded-full"></span>
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-800 font-bold text-xl shadow">IA</div>
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-blue-900 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h3 className="text-white font-bold text-lg">Asistente Virtual</h3>
-              <p className="text-blue-200 text-xs">Experto en el CV de Miguel</p>
+              <h3 className="text-white font-bold text-lg">Asistente de Miguel</h3>
+              <p className="text-blue-200 text-xs">Potenciado por Gemini IA</p>
             </div>
           </div>
         </div>
@@ -83,18 +122,11 @@ function AIAgent() {
         {/* ÁREA DE MENSAJES */}
         <div 
           ref={chatMessagesRef} 
-          className="h-[400px] overflow-y-auto p-4 space-y-4 bg-gray-50 scroll-smooth"
+          className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-smooth"
         >
-          {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full text-center space-y-3 opacity-60">
-              <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-              <p className="text-gray-500 text-sm">¡Hola! Pregúntame sobre la experiencia, <br/>habilidades o estudios de Miguel.</p>
-            </div>
-          )}
-
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
+              <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm shadow-sm whitespace-pre-wrap ${
                 msg.role === 'user' 
                   ? 'bg-blue-600 text-white rounded-br-none' 
                   : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
@@ -105,29 +137,29 @@ function AIAgent() {
           ))}
 
           {isLoading && (
-            <div className="flex justify-start animate-pulse">
-              <div className="bg-gray-200 text-gray-500 px-4 py-2 rounded-2xl rounded-bl-none text-xs font-semibold">
-                Analizando{loadingDots}
+            <div className="flex justify-start">
+              <div className="bg-gray-100 text-gray-500 px-4 py-2 rounded-full text-xs font-semibold animate-pulse">
+                Escribiendo{loadingDots}
               </div>
             </div>
           )}
         </div>
 
-        {/* INPUT AREA */}
-        <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100">
+        {/* INPUT */}
+        <form onSubmit={handleSendMessage} className="p-4 bg-white border-t border-gray-100 flex-shrink-0">
           <div className="relative flex items-center">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu consulta..."
-              className="w-full bg-gray-100 text-gray-700 rounded-full pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-inner"
+              placeholder="Escribe tu pregunta..."
+              className="w-full bg-gray-100 text-gray-700 rounded-full pl-5 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               disabled={isLoading}
             />
             <button 
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="absolute right-2 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+              className="absolute right-2 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
             </button>
