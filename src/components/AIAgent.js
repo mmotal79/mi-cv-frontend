@@ -1,4 +1,4 @@
-biendoimport React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function AIAgent() {
   const [messages, setMessages] = useState([]);
@@ -64,7 +64,7 @@ function AIAgent() {
             {/* HEMOS ELIMINADO EL BLOQUE QUE MOSTRABA LA TRAZA DE CONEXIÓN */}
           </div>
         ))}
-        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Escribiendo...</div>}
+        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Consultando modelos V3.0...</div>}
       </div>
 
       <form onSubmit={handleSendMessage} className="p-4 border-t flex gap-2">
@@ -72,7 +72,7 @@ function AIAgent() {
           className="flex-1 border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Escribe tu pregunta aquí..."
+          placeholder="Escribe tu pregunta..."
         />
         <button className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Enviar</button>
       </form>
@@ -81,7 +81,3 @@ function AIAgent() {
 }
 
 export default AIAgent;
-
-
-
-
