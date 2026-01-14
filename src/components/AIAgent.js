@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+biendoimport React, { useState, useRef, useEffect } from 'react';
 
 function AIAgent() {
   const [messages, setMessages] = useState([]);
@@ -47,11 +47,19 @@ function AIAgent() {
 
   return (
     <div className="max-w-xl mx-auto my-10 border rounded-xl shadow-lg bg-white flex flex-col h-[600px]">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-10">
+          Consúltame! Pregúntame sobre Miguel... 
+        </h2>
       <div className="p-4 bg-blue-700 text-white font-bold rounded-t-xl text-center">
         Asistente IA Miguel Mota - V3.0
       </div>
 
       <div ref={chatMessagesRef} className="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
+        {messages.length === 0 && (
+              <p className="text-gray-500 text-center italic">
+                ¡Hola! Soy el asistente personal de Miguel. Responderé cualquier pregunta sobre su currículum. Por ejemplo: "¿Cuál es su experiencia en C#?" o "¿Qué proyectos ha realizado?"
+              </p>
+        )}
         {messages.map((msg, i) => (
           <div key={i} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
             <div className={`p-3 rounded-lg max-w-[90%] shadow-md ${
@@ -64,7 +72,7 @@ function AIAgent() {
             {/* HEMOS ELIMINADO EL BLOQUE QUE MOSTRABA LA TRAZA DE CONEXIÓN */}
           </div>
         ))}
-        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Consultando modelos V3.0...</div>}
+        {isLoading && <div className="text-sm text-blue-500 italic animate-pulse">Escribiendo...</div>}
       </div>
 
       <form onSubmit={handleSendMessage} className="p-4 border-t flex gap-2">
@@ -72,7 +80,7 @@ function AIAgent() {
           className="flex-1 border p-2 rounded outline-none focus:ring-2 focus:ring-blue-500"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Escribe 'accesos' o una pregunta..."
+          placeholder="Escribe tu pregunta aquí..."
         />
         <button className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">Enviar</button>
       </form>
@@ -81,5 +89,6 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
 
 
