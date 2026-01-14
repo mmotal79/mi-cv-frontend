@@ -1,25 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 function AIAgent() {
-  const [messages, setMessages] = useState([
-    { role: 'bot', content: "¡Hola! Soy el asistente de Miguel. ¿En qué puedo ayudarte hoy?" }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [availableModels, setAvailableModels] = useState([]);
   const chatMessagesRef = useRef(null);
 
+  // Cargar modelos al iniciar
   useEffect(() => {
-    if (chatMessagesRef.current) {
-      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
-    }
-  }, [messages, isLoading]);
+    fetch('https://mi-cv-backend.onrender.com/api/modelos-disponibles')
+      .then(res => res.json())
+      .then(data => setAvailableModels(data.models))
+      .catch(() => setAvailableModels(["No se pudieron listar los modelos"]));
+  }, []);
 
   const handleSendMessage = async (e) => {
-    if (e) e.preventDefault(); // Evita que la página parpadee o se ponga en blanco
+    if (e) e.preventDefault(); // EVITA PANTALLA EN BLANCO
     if (!input.trim() || isLoading) return;
 
     const userText = input.trim();
-    setMessages(prev => [...prev, { role: 'user', content: userText }]);
+    setMessages(prev => [...prev, { sender: 'user', text: userText }]);
     setInput('');
     setIsLoading(true);
 
@@ -31,70 +32,50 @@ function AIAgent() {
       });
 
       const data = await response.json();
-
-      if (!response.ok) throw new Error(data.reply || "Error en IA");
-
-      setMessages(prev => [...prev, { role: 'bot', content: data.reply }]);
+      setMessages(prev => [...prev, { sender: 'ai', text: data.reply }]);
     } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'bot', 
-        content: `⚠️ Error de conexión: No pude obtener respuesta del servidor de IA.` 
-      }]);
+      setMessages(prev => [...prev, { sender: 'ai', text: "Error de comunicación. Intenta de nuevo." }]);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center p-4 bg-transparent">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col h-[500px] overflow-hidden">
+    <section className="py-10 bg-gray-50 min-h-screen">
+      <div className="max-w-2xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border">
         
-        {/* Cabecera Centrada */}
-        <div className="bg-blue-800 p-4 text-white text-center shadow-md flex-shrink-0">
-          <h3 className="font-bold text-lg">Asistente IA Miguel Mota</h3>
-          <p className="text-xs text-blue-200">Consultas sobre Trayectoria Profesional</p>
+        {/* Cabecera con lista de modelos */}
+        <div className="bg-blue-900 p-4 text-white">
+          <h2 className="font-bold text-lg text-center">Asistente de Miguel Mota</h2>
+          <div className="mt-2 text-[10px] text-blue-200 text-center opacity-70">
+             Modelos Gemini detectados: {availableModels.join(' | ')}
+          </div>
         </div>
 
-        {/* Cuerpo del Chat */}
-        <div ref={chatMessagesRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        {/* Chat */}
+        <div ref={chatMessagesRef} className="h-[400px] overflow-y-auto p-4 space-y-4">
           {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm ${
-                msg.role === 'user' ? 'bg-blue-600 text-white rounded-tr-none' : 'bg-white text-gray-800 border rounded-tl-none'
-              }`}>
-                {msg.content}
+            <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`p-3 rounded-xl max-w-[85%] text-sm ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                {msg.text}
               </div>
             </div>
           ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs animate-pulse font-medium">
-                Miguel está analizando...
-              </div>
-            </div>
-          )}
+          {isLoading && <div className="text-xs italic text-gray-400">Analizando...</div>}
         </div>
 
-        {/* Input con prevención de refresco */}
-        <form onSubmit={handleSendMessage} className="p-4 border-t bg-white flex space-x-2">
+        {/* Input */}
+        <form onSubmit={handleSendMessage} className="p-4 border-t flex gap-2">
           <input
-            type="text"
-            className="flex-1 border border-gray-300 p-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all text-sm"
-            placeholder="Pregunta sobre su experiencia..."
+            className="flex-1 border p-2 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={isLoading}
+            placeholder="¿Qué quieres saber de Miguel?"
           />
-          <button 
-            type="submit"
-            className="bg-blue-700 text-white px-5 py-2.5 rounded-xl hover:bg-blue-800 disabled:opacity-50 font-bold transition-all shadow-md"
-            disabled={isLoading || !input.trim()}
-          >
-            Enviar
-          </button>
+          <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Enviar</button>
         </form>
       </div>
-    </div>
+    </section>
   );
 }
 
