@@ -16,7 +16,7 @@ function AIAgent() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://tu-backend-render.com/api/chat-cv', {
+      const response = await fetch('https://mi-cv-backend.onrender.com/api/chat-cv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userText }),
@@ -89,3 +89,4 @@ function AIAgent() {
 }
 
 export default AIAgent;
+
